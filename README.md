@@ -1,6 +1,6 @@
 # Stock Market Analytics & Alerting System (2020–2024)
 
-This project delivers a real-time stock market analytics pipeline that simulates daily stock data ingestion, tracks key financial indicators, and triggers anomaly alerts using Prefect and email notifications — all visualized through an interactive Power BI dashboard and a Streamlit ML prediction app.
+This project delivers a real-time stock market analytics pipeline that simulates daily stock data ingestion, tracks key financial indicators, and triggers anomaly alerts using Prefect and email notifications, all visualized through an interactive Power BI dashboard and a Streamlit ML prediction app.
 
 
 ## Why This Project?
