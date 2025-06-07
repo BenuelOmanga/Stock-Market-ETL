@@ -1,0 +1,8 @@
+pandas
+numpy
+scikit-learn
+streamlit
+prefect==3.4.4
+prefect-email
+python-dotenv
+yfinance

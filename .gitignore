@@ -1,0 +1,3 @@
+# Ignore sensitive config
+.env
+prefect_pipeline/create_email_block.py
