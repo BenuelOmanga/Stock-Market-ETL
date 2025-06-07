@@ -1,8 +1,7 @@
-# 📊 Stock Market Analytics & Alerting System (2020–2024)
+# Stock Market Analytics & Alerting System (2020–2024)
 
 This project delivers a real-time stock market analytics pipeline that simulates daily stock data ingestion, tracks key financial indicators, and triggers anomaly alerts using Prefect and email notifications — all visualized through an interactive Power BI dashboard and a Streamlit ML prediction app.
 
----
 
 ## Why This Project?
 
@@ -13,7 +12,6 @@ With growing volatility in global stock markets, investors and analysts need:
 
 We built this pipeline to replicate a real-world, end-to-end stock intelligence system — ideal for decision-makers, analysts, or retail investors seeking live insights without manually tracking the market.
 
----
 
 ## Dashboard Goals
 
@@ -28,7 +26,6 @@ The Power BI dashboard serves as the main interface for insights and visual anal
 
 All metrics are interactive by stock ticker (AAPL, AMZN, GOOGL, META, MSFT) and time range (2020–2024).
 
----
 
 ## Anomaly Monitoring
 
@@ -41,9 +38,8 @@ This system tracks specific thresholds or abnormal patterns and sends alerts whe
 
 These events trigger automated emails to stakeholders for rapid response and visibility.
 
----
 
-## 🔎 Data Source & Ingestion
+## Data Source & Ingestion
 
 - **Source**: Yahoo Finance historical data
 - **Period Covered**: January 2020 to December 2024
@@ -51,7 +47,6 @@ These events trigger automated emails to stakeholders for rapid response and vis
 - **Storage**: Cleaned data saved in SQLite
 - **Simulation**: In 2025, the pipeline simulates new daily rows from 2024 data for testing alerts and ML
 
----
 
 ## Tools & Technologies Used
 
@@ -78,5 +73,4 @@ These events trigger automated emails to stakeholders for rapid response and vis
 - `Power BI` for the main dashboard
 - Live connection to SQLite for dynamic visuals and updates
 
----
 
