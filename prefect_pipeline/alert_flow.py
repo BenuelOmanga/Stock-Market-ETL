@@ -24,8 +24,8 @@ def load_latest_data():
     fallback_used = False
 
     if not os.path.exists(DAILY_DB_PATH):
-        print(f"❌ Database for today not found: {DAILY_DB_PATH}")
-        print("👉 Using most recent backup instead.")
+        print(f"Database for today not found: {DAILY_DB_PATH}")
+        print("Using most recent backup instead.")
 
         # Attempt to locate latest existing db
         folder = os.path.dirname(DAILY_DB_PATH)
@@ -36,17 +36,17 @@ def load_latest_data():
         db_files.sort(reverse=True)
         fallback_path = os.path.join(folder, db_files[0])
         shutil.copyfile(fallback_path, LATEST_DB_PATH)
-        print(f"✅ Copied fallback DB: {fallback_path} → latest_stocks_data.db")
+        print(f"Copied fallback DB: {fallback_path} → latest_stocks_data.db")
         fallback_used = True
     else:
         shutil.copyfile(DAILY_DB_PATH, LATEST_DB_PATH)
-        print(f"✅ Copied today's DB to latest_stocks_data.db")
+        print(f"Copied today's DB to latest_stocks_data.db")
 
     conn = sqlite3.connect(LATEST_DB_PATH)
     df = pd.read_sql_query("SELECT * FROM stock_data", conn)
     conn.close()
 
-    print(f"✅ Loaded {len(df)} row(s) from {LATEST_DB_PATH}")
+    print(f"Loaded {len(df)} row(s) from {LATEST_DB_PATH}")
     return df
 
 @task
@@ -54,11 +54,11 @@ def detect_anomalies(df: pd.DataFrame) -> str:
     threshold = 3.0
     anomalies = df[df["Volatility_30"] > threshold]
     if anomalies.empty:
-        print("✅ No anomalies found today.")
+        print("No anomalies found today.")
         return ""
 
     message = "\n".join(
-        f"⚠️ {row['Ticker']} volatility high: {row['Volatility_30']:.2f}%"
+        f"{row['Ticker']} volatility high: {row['Volatility_30']:.2f}%"
         for _, row in anomalies.iterrows()
     )
     print(message)
@@ -67,7 +67,7 @@ def detect_anomalies(df: pd.DataFrame) -> str:
 @task
 def send_email_report(alert_message: str):
     if not alert_message:
-        print("✅ No alert email sent.")
+        print("No alert email sent.")
         return
 
     email_block = EmailServerCredentials.load("gmail-notifier")
@@ -80,7 +80,7 @@ def send_email_report(alert_message: str):
         msg=alert_message,
         email_to=TO_ADDRESSES,
     ))
-    print("📧 Alert email sent to recipients.")
+    print("Alert email sent to recipients.")
 
 # === FLOW === #
 @flow(name="Stock Anomaly Alert Flow")

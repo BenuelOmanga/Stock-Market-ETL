@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 import shutil
 
-# Load full cleaned dataset
+
 @task
 def load_full_dataset(filepath: str) -> pd.DataFrame:
     logger = get_run_logger()
@@ -13,7 +13,7 @@ def load_full_dataset(filepath: str) -> pd.DataFrame:
     logger.info(f"Loaded dataset with {len(df)} rows.")
     return df
 
-# Get today's simulated 2024-xx-xx row(s)
+
 @task
 def get_simulated_today_row(df: pd.DataFrame) -> pd.DataFrame:
     logger = get_run_logger()
@@ -27,7 +27,7 @@ def get_simulated_today_row(df: pd.DataFrame) -> pd.DataFrame:
         logger.info(f"Retrieved {len(today_row)} row(s) for {simulated_date.date()}")
     return today_row
 
-# Insert to date-tagged DB with deduplication
+
 @task
 def insert_into_sqlite(row_df: pd.DataFrame):
     logger = get_run_logger()
@@ -56,11 +56,12 @@ def insert_into_sqlite(row_df: pd.DataFrame):
     finally:
         conn.close()
 
-# Save to date-tagged CSV (already deduplicated)
+
 @task
 def save_to_csv(row_df: pd.DataFrame):
     logger = get_run_logger()
     if row_df.empty:
+        logger.warning("No data to save as CSV.")
         return
 
     sim_date = row_df["Date"].iloc[0].strftime("%Y-%m-%d")
@@ -80,10 +81,9 @@ def save_to_csv(row_df: pd.DataFrame):
     updated.to_csv(csv_path, index=False)
     logger.info(f"Saved CSV to {csv_path} with {len(updated)} total row(s)")
 
-# Copy latest CSV to fixed name for Power BI
+
 @task
 def copy_latest_csv():
-    from datetime import datetime
     logger = get_run_logger()
     sim_date = datetime.today().strftime("2024-%m-%d")
     source = Path(f"Data/processed/stocks_data_{sim_date}.csv")
@@ -95,7 +95,7 @@ def copy_latest_csv():
     else:
         logger.warning(f"Source CSV file not found: {source}")
 
-# Verify insert
+
 @task
 def verify_inserted_data(row_df: pd.DataFrame):
     logger = get_run_logger()
@@ -119,7 +119,7 @@ def verify_inserted_data(row_df: pd.DataFrame):
     if not df.empty:
         logger.info(df.to_string(index=False))
 
-# Main Prefect flow
+
 @flow(name="Daily Stock Data Loader")
 def daily_data_flow():
     df = load_full_dataset("Data/processed/all_stocks_cleaned.csv")
@@ -129,13 +129,18 @@ def daily_data_flow():
     copy_latest_csv()
     verify_inserted_data(today_row)
 
+    # Final step — optional .db file for Power BI
+    if not today_row.empty:
+        sim_date = today_row["Date"].iloc[0].strftime("%Y-%m-%d")
+        source_db = f"Data/processed/stocks_data_{sim_date}.db"
+        dest_db = "Data/processed/latest_stocks_data.db"
+
+        if Path(source_db).exists():
+            shutil.copyfile(source_db, dest_db)
+            print("Updated Power BI database: latest_stocks_data.db")
+        else:
+            print(f"Could not find {source_db}, skipping final .db copy.")
+
+
 if __name__ == "__main__":
     daily_data_flow()
-
-    # Also generate latest_stocks_data.db for backup (Power BI or dashboard ODBC use)
-    real_today = datetime.today()
-    sim_date = f"2024-{real_today.month:02d}-{real_today.day:02d}"
-    source_db = f"Data/processed/stocks_data_{sim_date}.db"
-    dest_db = "Data/processed/latest_stocks_data.db"
-    shutil.copyfile(source_db, dest_db)
-    print("Updated Power BI database: latest_stocks_data.db")
