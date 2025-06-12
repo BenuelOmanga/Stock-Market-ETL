@@ -2,7 +2,7 @@ import streamlit as st
 import pickle
 import numpy as np
 
-with open("ML_Model/ridge_model.pkl", "rb") as file:
+with open("ridge_model.pkl", "rb") as file:
     model = pickle.load(file)
 
 st.title("Stock Price Predictor (Ridge Regression)")

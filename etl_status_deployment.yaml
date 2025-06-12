@@ -1,0 +1,13 @@
+name: etl-status-check
+version: 1.0
+description: "Runs ETL every 30 minutes and sends status email"
+
+entrypoint: prefect_pipeline/etl_pipeline.py:daily_data_flow
+
+schedule:
+  interval: 1800  # every 30 minutes
+
+work_pool:
+  name: default    
+  work_queue_name: default
+  job_variables: {}
