@@ -42,19 +42,18 @@ These events trigger automated emails to stakeholders for rapid response and vis
 
 The ETL pipeline now includes a fully working email notification system.
 
-- Emails are sent after each ETL run—**every 30 minutes**—to indicate success or failure.
+- Emails are sent after each ETL run **every 30 minutes** to indicate success or failure.
 - The email includes a subject line (`ETL Success` or `ETL Failure`) and a brief message.
 - If the ETL fails, the error details are included in the email body.
 
 ### Email Configuration
 
-Email credentials and recipient list are stored in a `.env` file for security. This file is not tracked in Git. Here's how to set it up:
+Email credentials and recipient list are stored in a `.env` file for security. This file is not tracked in Git. Here's how to set it up: 
 
-```env
+#### env
 EMAIL_FROM=your_email@gmail.com
 EMAIL_PASSWORD=your_app_password
 EMAIL_TO=recipient1@example.com,recipient2@example.com
-
 
 
 ## Data Source & Ingestion
@@ -90,5 +89,4 @@ EMAIL_TO=recipient1@example.com,recipient2@example.com
 ### Visualization
 - `Power BI` for the main dashboard
 - Live connection to SQLite for dynamic visuals and updates
-
 
